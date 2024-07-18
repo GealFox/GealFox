@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Boleta Electrónica Ebenezer</title>
+    <link rel="stylesheet" href="https://drive.google.com/uc?export=view&id=11XJsVFs02w0gufS_BwiU28dfjok9mKmD" />
+    <link rel="stylesheet" href="https://drive.google.com/uc?export=view&id=11OLytw-YSwAvSXoz6nyS98m3z7haey5p" media="print" />
+    <script src="https://drive.google.com/uc?export=view&id=11UTMGtwABP56_LJph-W3dF-0vCUd7JGj" defer></script>
+    <script src="https://drive.google.com/uc?export=view&id=11QQ5-Xyd58t1_pWGCZzHDK5t-Af6iHtF" defer></script>
+    <style>
+        .button-container {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button onclick="toggleView()">Imprimir</button>
+    </div>
+    <div id="app">
+        <div class="container"> 
+            <h1>Boleta Electrónica Ebenezer</h1> 
+            <div class="form-section"> 
+                <h2>Datos del Cliente</h2> 
+                <form id="client-form"> 
+                    <div class="form-group"> 
+                        <label for="fecha">Fecha:</label> 
+                        <input type="date" id="fecha" name="fecha" required> 
+                    </div> 
+                    <div class="form-group"> 
+                        <label for="nombre">Nombre y Apellido:</label> 
+                        <input type="text" id="nombre" name="nombre" required> 
+                    </div> 
+                    <div class="form-group"> 
+                        <label for="direccion">Dirección:</label> 
+                        <input type="text" id="direccion" name="direccion" required> 
+                    </div> 
+                    <div class="form-group"> 
+                        <label for="telefono">Teléfono:</label> 
+                        <input type="text" id="telefono" name="telefono" required> 
+                    </div> 
+                </form> 
+                <h2>Agregar Producto</h2> 
+                <form id="product-form"> 
+                    <div class="form-group"> 
+                        <label for="descripcion">Descripción:</label> 
+                        <input type="text" id="descripcion" name="descripcion" required> 
+                    </div> 
+                    <div class="form-group"> 
+                        <label for="cantidad">Cantidad:</label> 
+                        <input type="number" id="cantidad" name="cantidad" required> 
+                    </div> 
+                    <div class="form-group"> 
+                        <label for="precio_unitario">Precio Unitario:</label> 
+                        <input type="number" id="precio_unitario" name="precio_unitario" required step="0.01"> 
+                    </div> 
+                    <button type="submit" class="btn">Agregar</button> 
+                </form> 
+            </div> 
+            <div class="boleta-section"> 
+                <h2>Productos Totales</h2> 
+                <table id="boleta-table"> 
+                    <thead> 
+                        <tr> 
+                            <th>Descripción</th> 
+                            <th>Cantidad</th> 
+                            <th>Precio Unitario</th> 
+                            <th>Total</th> 
+                        </tr> 
+                    </thead> 
+                    <tbody> 
+                    </tbody> 
+                </table> 
+                <div class="total-section"> 
+                    <h3>Total: <span id="total-boleta">0</span></h3> 
+                </div> 
+                <div class="btn-group"> 
+                    <button type="button" class="btn" onclick="limpiarDatos()">Limpiar Datos</button> 
+                    <button type="button" class="btn" id="generarPDF">Generar PDF</button> 
+                </div> 
+            </div> 
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+        <script src="https://drive.google.com/uc?export=view&id=11UTMGtwABP56_LJph-W3dF-0vCUd7JGj"></script> 
+    </div>
+    <div id="print" style="display: none;">
+        <header>
+            <img src="https://drive.google.com/uc?export=view&id=11LsP-DL8p4vzBHVHU7RBFQ_SXQkBojnz" alt="Logo Ebenezer" id="logo-ebenezer" style="width:250px;" crossOrigin="anonymous">
+            <h1>Presupuesto</h1>
+            <p>(documento no válido como factura)</p>
+        </header>
+        <main>
+            <section class="informacion-empresa">
+                <div class="nombre-empresa">
+                    <h2>Ebenezer Nissi</h2>
+                    <p>Accesorios para exaltar al Rey de Reyes.</p>
+                </div>
+                <div class="datos-empresa">
+                    <p id="print-fecha">FECHA:</p>
+                    <p>Art. de Librería</p>
+                    <p>Regalería Cristiana</p>
+                    <p>11-6118-1585</p>
+                </div>
+            </section>
+            <section class="informacion-cliente">
+                <p id="print-nombre">Apellido y Nombre:</p>
+                <p id="print-direccion">Dirección</p>
+                <p id="print-telefono">Tel:</p>
+            </section>
+            <section class="productos">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DESCRIPCIÓN</th>
+                            <th>CANT</th>
+                            <th>Precio Unitario</th>
+                            <th>MONTO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="print-productos-tbody">
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">Total</td>
+                            <td id="print-total"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+            <div class="observaciones">
+                <label for="observaciones">Observaciones:</label>
+                <textarea id="observaciones" rows="4"></textarea>
+            </div>
+        </main>
+        <div class="btn-group">
+            <button type="button" class="btn" onclick="window.print()">Imprimir</button>
+            <button type="button" class="btn" id="descargarPDF">Descargar PDF</button>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://drive.google.com/uc?export=view&id=11QQ5-Xyd58t1_pWGCZzHDK5t-Af6iHtF"></script>
+    </div>
+    <script>
+        function toggleView() {
+            var app = document.getElementById('app');
+            var print = document.getElementById('print');
+            if (app.style.display === 'none') {
+                app.style.display = 'block';
+                print.style.display = 'none';
+            } else {
+                app.style.display = 'none';
+                print.style.display = 'block';
+                window.print();
+            }
+        }
+    </script>
+</body>
+</html>
